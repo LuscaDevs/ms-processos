@@ -1,11 +1,9 @@
 package br.com.luscadevs.msprocessos.controller;
 
 import org.springframework.web.bind.annotation.RestController;
-
-import br.com.luscadevs.msprocessos.model.Processo;
 import br.com.luscadevs.msprocessos.service.ProcessoService;
+import reactor.core.publisher.Mono;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,13 +17,9 @@ public class ProcessoController {
     private ProcessoService processoService;
 
     @GetMapping("/{numeroProcesso}")
-    public ResponseEntity<Object> getProcessoByNumber(@PathVariable String numeroProcesso) {
-        try {
-            Processo processo = processoService.getProcessoByNumber(numeroProcesso);
-            return ResponseEntity.ok().body(processo);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Erro ao buscar usuário Id: " + e.getMessage());
-        }
+    public Mono<ResponseEntity<Object>> getProcessoByNumber(@PathVariable String numeroProcesso) {
+        return processoService.getProcessoByNumber(numeroProcesso)
+                .map(processo -> ResponseEntity.ok().body((Object) processo))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 }
