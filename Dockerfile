@@ -1,23 +1,24 @@
-# Use an official Java 17 image as the base
-FROM adoptopenjdk:17-jdk-alpine
+# Estágio de construção
+FROM maven:3.8.4-openjdk-17 AS build
 
-# Set the working directory to /app
 WORKDIR /app
 
-# Copy the Maven dependencies (pom.xml) to the working directory
+# Copia o pom.xml primeiro para evitar baixar dependências novamente se não houver mudanças
 COPY pom.xml .
-
-# Download the Maven dependencies
 RUN mvn dependency:go-offline
 
-# Copy the application code to the working directory
-COPY . .
+# Copia o código-fonte e compila o projeto
+COPY src ./src
+RUN mvn package
 
-# Build the application with Maven
-RUN mvn package -DskipTests
+# Estágio de produção
+FROM openjdk:17-jdk-slim
 
-# Expose the port for the Spring Boot application
+WORKDIR /app
+
+# Copia o JAR construído do estágio anterior
+COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8080
 
-# Run the Spring Boot application when the container starts
-CMD ["java", "-jar", "target/ms-processos-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "app.jar"]
