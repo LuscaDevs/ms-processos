@@ -1,10 +1,8 @@
 package br.com.luscadevs.msprocessos.service;
 
 import br.com.luscadevs.msprocessos.model.Processo;
-import br.com.luscadevs.msprocessos.repository.ProcessoRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -13,9 +11,6 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class ProcessoService {
-
-    @Autowired
-    private ProcessoRepository processoRepository;
 
     private final WebClient webClient;
 
