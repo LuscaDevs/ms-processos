@@ -10,7 +10,7 @@ public class ProcessoScheduledTask {
     @Autowired
     private ProcessoService processoService;
 
-    @Scheduled(cron = "0 0 */6 * * *") // A cada 6 horas
+    @Scheduled(fixedRate = 14400000) // A cada 4 horas
     public void executeProcessoTask() {
         String numeroProcesso = "00011646420238173390"; // Número do processo a ser consultado
         processoService.getProcessoByNumber(numeroProcesso)
