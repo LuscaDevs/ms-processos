@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequestMapping("/processo")
-
 public class ProcessoController {
     @Autowired
     private ProcessoService processoService;
